@@ -4,19 +4,19 @@ class Product:
     __price: float
     quantity: int
 
-    def __init__(self, name, description, __price, quantity):
+    def __init__(self, name, description, price, quantity):
         self.name = name
         self.description = description
-        self.__price = __price
+        self.__price = price
         self.quantity = quantity
 
     @classmethod
     def new_product(cls, new_dict):
-        cls.name = new_dict.get("name")
-        cls.description = new_dict.get("description")
-        cls.__price = new_dict.get("price")
-        cls.quantity = new_dict.get("quantity")
-        return cls(cls.name, cls.description, cls.__price, cls.quantity)
+        name = new_dict.get("name")
+        description = new_dict.get("description")
+        price = new_dict.get("price")
+        quantity = new_dict.get("quantity")
+        return cls(name, description, price, quantity)
 
     @property
     def price(self):
@@ -37,19 +37,21 @@ class Category:
     category_count = 0
     product_count = 0
 
-    def __init__(self, name, description, __products):
+    def __init__(self, name, description, products):
         self.name = name
         self.description = description
-        self.__products = __products
+        self.__products = products
         Category.category_count += 1
-        self.product_count = len(__products)
+        self.product_count = len(products)
 
     def add_product(self, product):
-        self.__products.append(product)
-        self.product_count += 1
+        if isinstance(product, Product):
+            self.__products.append(product)
+            self.product_count += 1
 
     @property
     def products(self):
         return ", ".join(
             [f"{x.name}, {x.price} руб. Остаток: {x.quantity}" for x in self.__products]
         )
+
