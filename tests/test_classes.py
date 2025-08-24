@@ -1,8 +1,8 @@
-# mypy: ignore-errors
-
 import pytest
 
-from src.classes import Category, Product
+from src.classes import Category, LawnGrass, Product, Smartphone
+
+# mypy: ignore-errors
 
 
 @pytest.fixture
@@ -143,3 +143,137 @@ def testing_15_1():
     assert text_for_product == category1.products
     assert summ_of_products_1_2 == summ
     assert str(product1) == text_for_1_product
+
+
+@pytest.fixture
+def product_smartphone() -> Smartphone:
+    return Smartphone(
+        "Samsung Galaxy S23 Ultra",
+        "256GB, Серый цвет, 200MP камера",
+        180000.0,
+        5,
+        95.5,
+        "S23 Ultra",
+        256,
+        "Серый",
+    )
+
+
+def test_smartphone(product_smartphone):
+    assert product_smartphone.name == "Samsung Galaxy S23 Ultra"
+    assert product_smartphone.description == "256GB, Серый цвет, 200MP камера"
+    assert product_smartphone.price == 180000.0
+    assert product_smartphone.quantity == 5
+    assert product_smartphone.efficiency == 95.5
+    assert product_smartphone.model == "S23 Ultra"
+    assert product_smartphone.memory == 256
+    assert product_smartphone.color == "Серый"
+
+
+@pytest.fixture
+def product_grass() -> LawnGrass:
+    return LawnGrass(
+        "Газонная трава",
+        "Элитная трава для газона",
+        500.0,
+        20,
+        "Россия",
+        "7 дней",
+        "Зеленый",
+    )
+
+
+def test_grass(product_grass):
+    assert product_grass.name == "Газонная трава"
+    assert product_grass.description == "Элитная трава для газона"
+    assert product_grass.price == 500.0
+    assert product_grass.quantity == 20
+    assert product_grass.country == "Россия"
+    assert product_grass.germination_period == "7 дней"
+    assert product_grass.color == "Зеленый"
+
+
+def testing_16_1() -> None:
+    grass1 = LawnGrass(
+        "Газонная трава",
+        "Элитная трава для газона",
+        500.0,
+        20,
+        "Россия",
+        "7 дней",
+        "Зеленый",
+    )
+    grass2 = LawnGrass(
+        "Газонная трава 2",
+        "Выносливая трава",
+        450.0,
+        15,
+        "США",
+        "5 дней",
+        "Темно-зеленый",
+    )
+    smartphone1 = Smartphone(
+        "Samsung Galaxy S23 Ultra",
+        "256GB, Серый цвет, 200MP камера",
+        180000.0,
+        5,
+        95.5,
+        "S23 Ultra",
+        256,
+        "Серый",
+    )
+    smartphone2 = Smartphone(
+        "Iphone 15", "512GB, Gray space", 210000.0, 8, 98.2, "15", 512, "Gray space"
+    )
+
+    grass_sum = grass1 + grass2
+    smartphone_sum = smartphone1 + smartphone2
+    assert smartphone_sum == 2580000.0
+    assert grass_sum == 16750.0
+
+
+def error_invalid_sum():
+    grass1 = LawnGrass(
+        "Газонная трава",
+        "Элитная трава для газона",
+        500.0,
+        20,
+        "Россия",
+        "7 дней",
+        "Зеленый",
+    )
+    smartphone1 = Smartphone(
+        "Samsung Galaxy S23 Ultra",
+        "256GB, Серый цвет, 200MP камера",
+        180000.0,
+        5,
+        95.5,
+        "S23 Ultra",
+        256,
+        "Серый",
+    )
+
+    with pytest.raises(TypeError):
+        smartphone1 + grass1
+
+
+def error_invalid_add():
+
+    smartphone1 = Smartphone(
+        "Samsung Galaxy S23 Ultra",
+        "256GB, Серый цвет, 200MP камера",
+        180000.0,
+        5,
+        95.5,
+        "S23 Ultra",
+        256,
+        "Серый",
+    )
+    smartphone2 = Smartphone(
+        "Iphone 15", "512GB, Gray space", 210000.0, 8, 98.2, "15", 512, "Gray space"
+    )
+    category_smartphones = Category(
+        "Смартфоны", "Высокотехнологичные смартфоны", [smartphone1, smartphone2]
+    )
+    with pytest.raises(TypeError):
+        category_smartphones.add_product("Not a product")

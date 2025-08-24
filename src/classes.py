@@ -35,7 +35,10 @@ class Product:
         return f"{self.name}, {self.__price} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, another: "Product") -> float:
-        return self.price * self.quantity + another.price * another.quantity
+        if type(self) == type(another):
+            return self.price * self.quantity + another.price * another.quantity
+        else:
+            raise TypeError
 
 
 class Category:
@@ -52,10 +55,12 @@ class Category:
         Category.category_count += 1
         self.product_count = len(products)
 
-    def add_product(self, product: str) -> None:
+    def add_product(self, product: Product) -> None:
         if isinstance(product, Product):
             self.__products.append(product)
             self.product_count += 1
+        else:
+            raise TypeError
 
     @property
     def products(self) -> str:
@@ -68,3 +73,39 @@ class Category:
         for x in self.__products:
             counter += x.quantity
         return f"{self.name}, Количество продуктов шт.{counter}"
+
+
+class Smartphone(Product):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        efficiency: float,
+        model: str,
+        memory: int,
+        color: str,
+    ) -> None:
+        super().__init__(name, description, price, quantity)
+        self.efficiency = efficiency
+        self.model = model
+        self.memory = memory
+        self.color = color
+
+
+class LawnGrass(Product):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        country: str,
+        germination_period: str,
+        color: str,
+    ) -> None:
+        super().__init__(name, description, price, quantity)
+        self.country = country
+        self.germination_period = germination_period
+        self.color = color
