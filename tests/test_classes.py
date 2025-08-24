@@ -1,3 +1,5 @@
+# mypy: ignore-errors
+
 import pytest
 
 from src.classes import Category, Product
@@ -104,11 +106,40 @@ class TestCategory:
         with pytest.raises(AttributeError):
             sample_category.__products
 
-    def test_product_count_initialization(self, sample_category, sample_products):
+    def test_product_count_initialization(
+        self, sample_category, sample_products
+    ) -> None:
         assert sample_category.product_count == len(sample_products)
 
-    def test_category_count_increment(self):
+    def test_category_count_increment(self) -> None:
         initial_count = Category.category_count
         products = [Product("Тест", "Тест", 100, 1)]
-        category = Category("Тест", "Тест", products)
+        Category("Тест", "Тест", products)
         assert Category.category_count == initial_count + 1
+
+
+def testing_15_1():
+    product1 = Product(
+        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
+    )
+    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
+    product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
+
+    category1 = Category(
+        "Смартфоны",
+        "Смартфоны, как средство не только коммуникации, но и получения дополнительных функций для удобства "
+        "жизни",
+        [product1, product2, product3],
+    )
+    text_for_1_product = "Samsung Galaxy S23 Ultra, 180000.0 руб. Остаток: 5 шт."
+    text_for_category = "Смартфоны, Количество продуктов шт.27"
+    text_for_product = (
+        "Samsung Galaxy S23 Ultra, 180000.0 руб. Остаток: 5, Iphone 15, 210000.0 руб. Остаток: 8, "
+        "Xiaomi Redmi Note 11, 31000.0 руб. Остаток: 14"
+    )
+    summ_of_products_1_2 = 2580000.0
+    summ = product1 + product2
+    assert text_for_category == str(category1)
+    assert text_for_product == category1.products
+    assert summ_of_products_1_2 == summ
+    assert str(product1) == text_for_1_product
