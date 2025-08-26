@@ -133,10 +133,11 @@ def testing_15_1():
     )
     text_for_1_product = "Samsung Galaxy S23 Ultra, 180000.0 руб. Остаток: 5 шт."
     text_for_category = "Смартфоны, Количество продуктов шт.27"
-    text_for_product = (
-        "Samsung Galaxy S23 Ultra, 180000.0 руб. Остаток: 5, Iphone 15, 210000.0 руб. Остаток: 8, "
-        "Xiaomi Redmi Note 11, 31000.0 руб. Остаток: 14"
-    )
+    text_for_product = [
+        "Samsung Galaxy S23 Ultra, 180000.0 руб. Остаток: 5",
+        "Iphone 15, 210000.0 руб. Остаток: 8",
+        "Xiaomi Redmi Note 11, 31000.0 руб. Остаток: 14",
+    ]
     summ_of_products_1_2 = 2580000.0
     summ = product1 + product2
     assert text_for_category == str(category1)
@@ -277,3 +278,13 @@ def error_invalid_add():
     )
     with pytest.raises(TypeError):
         category_smartphones.add_product("Not a product")
+
+
+def test_16_2(capsys):
+
+    Product("Test Product", "Test Description", 100.0, 5)
+    captured = capsys.readouterr()
+    output = captured.out.strip()
+
+    # Проверяем вывод
+    assert output == "(Product('Test Product', 'Test Description', 5)"

@@ -175,3 +175,4 @@ cython_debug/
 
 tests/log.txt
 src/lesssons.py
+notes.py

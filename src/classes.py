@@ -1,4 +1,44 @@
-class Product:
+from abc import ABC, abstractmethod
+
+
+class BaseClass(ABC):
+
+    @abstractmethod
+    def __init__(self, name: str, description: str, quantity: int, price: float):
+        self.name = name
+        self.description = description
+        self.quantity = quantity
+        self._price = price
+
+    @classmethod
+    @abstractmethod
+    def new_product(cls, new_dict: dict) -> "Product":
+        pass
+
+    @abstractmethod
+    def price(self) -> float:
+        pass
+
+    @abstractmethod
+    def __str__(self) -> str:
+        pass
+
+    @abstractmethod
+    def __add__(self, another: "Product") -> float:
+        pass
+
+
+class MixinLog:
+
+    def __init__(self, name: str, description: str, quantity: int, price: float):
+        super().__init__(name, description, quantity, price)
+        print(self.__repr__())
+
+    def __repr__(self) -> str:
+        return f"({self.__class__.__name__}('{self.name}', '{self.description}', {self.quantity})"
+
+
+class Product(MixinLog, BaseClass):
     name: str
     description: str
     __price: float
@@ -7,10 +47,8 @@ class Product:
     def __init__(
         self, name: str, description: str, price: float, quantity: int
     ) -> None:
-        self.name = name
-        self.description = description
+        super().__init__(name, description, quantity, price)
         self.__price = price
-        self.quantity = quantity
 
     @classmethod
     def new_product(cls, new_dict: dict) -> "Product":
@@ -35,7 +73,7 @@ class Product:
         return f"{self.name}, {self.__price} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, another: "Product") -> float:
-        if type(self) == type(another):
+        if type(self) is type(another):
             return self.price * self.quantity + another.price * another.quantity
         else:
             raise TypeError
@@ -63,10 +101,10 @@ class Category:
             raise TypeError
 
     @property
-    def products(self) -> str:
-        return ", ".join(
-            [f"{x.name}, {x.price} руб. Остаток: {x.quantity}" for x in self.__products]
-        )
+    def products(self) -> list:
+        return [
+            f"{x.name}, {x.price} руб. Остаток: {x.quantity}" for x in self.__products
+        ]
 
     def __str__(self) -> str:
         counter = 0
