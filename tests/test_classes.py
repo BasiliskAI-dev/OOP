@@ -288,3 +288,34 @@ def test_16_2(capsys):
 
     # Проверяем вывод
     assert output == "(Product('Test Product', 'Test Description', 5)"
+
+
+def test_17_1_error_of_product():
+    with pytest.raises(
+        ValueError, match="Товар с нулевым количеством не может быть добавлен"
+    ):
+        Product("Бракованный товар", "Неверное количество", 1000.0, 0)
+
+
+def test_17_1_error_of_category():
+
+    with pytest.raises(
+        ZeroDivisionError,
+        match="Количество товаров не может быть ноль в категории. Перепроверьте исходные данные",
+    ):
+        category_empty = Category("Пустая категория", "Категория без продуктов", [])
+        print(category_empty.middle_price())
+
+
+def test_17_1_middle_price():
+    product1 = Product(
+        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
+    )
+    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
+    product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
+
+    category1 = Category(
+        "Смартфоны", "Категория смартфонов", [product1, product2, product3]
+    )
+
+    assert category1.middle_price() == 140333.33

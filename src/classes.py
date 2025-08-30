@@ -8,6 +8,8 @@ class BaseClass(ABC):
         self.name = name
         self.description = description
         self.quantity = quantity
+        if quantity <= 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
         self._price = price
 
     @classmethod
@@ -111,6 +113,19 @@ class Category:
         for x in self.__products:
             counter += x.quantity
         return f"{self.name}, Количество продуктов шт.{counter}"
+
+    def middle_price(self) -> float:
+        average = 0
+        average_list = [x.price for x in self.__products]
+        for x in average_list:
+            average += x
+        try:
+            middle = average / len(average_list)
+            return round(middle, 2)
+        except ZeroDivisionError:
+            raise ZeroDivisionError(
+                "Количество товаров не может быть ноль в категории. Перепроверьте исходные данные"
+            )
 
 
 class Smartphone(Product):
